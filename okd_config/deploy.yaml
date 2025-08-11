@@ -1,0 +1,63 @@
+---
+# Backend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: certificatecheck-backend
+  namespace: site-cert-check
+  labels:
+    app: certificatecheck-backend
+    component: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: certificatecheck-backend
+  template:
+    metadata:
+      labels:
+        app: certificatecheck-backend
+        component: backend
+    spec:
+      containers:
+      - name: backend
+        image: [server image name]
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9614
+          protocol: TCP
+        env:
+        - name: CORS_ORIGINS
+          value: [server front api]
+
+---
+# Frontend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: certificatecheck-frontend
+  namespace: site-cert-check
+  labels:
+    app: certificatecheck-frontend
+    component: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: certificatecheck-frontend
+  template:
+    metadata:
+      labels:
+        app: certificatecheck-frontend
+        component: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: [server image name]
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        env:  
+        - name: REACT_APP_BACKEND_API
+          value: [server api]

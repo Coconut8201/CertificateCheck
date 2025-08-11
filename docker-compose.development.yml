@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_BACKEND_API: http://localhost:9614
+    image: certificatecheck-frontend:1.0.0
+    container_name: CertificateCheck-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: certificatecheck-backend:1.0.0
+    container_name: CertificateCheck-backend
+    ports:
+      - "9614:9614"
+    environment:
+      - CORS_ORIGINS=localhost

@@ -1,0 +1,13 @@
+# 在專案根目錄創建 .dockerignore 檔案
+node_modules
+*/node_modules
+
+.git
+.gitignore
+README.md
+.env
+.DS_Store
+
+.zeabur/
+
+./build

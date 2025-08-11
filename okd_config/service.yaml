@@ -1,0 +1,79 @@
+---
+# Backend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: certificatecheck-backend-service
+  namespace: site-cert-check
+  labels:
+    app: certificatecheck-backend
+    component: backend
+spec:
+  selector:
+    app: certificatecheck-backend
+  ports:
+  - name: http
+    port: 9614
+    targetPort: 9614
+    protocol: TCP
+  type: ClusterIP
+
+---
+# Frontend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: certificatecheck-frontend-service
+  namespace: site-cert-check
+  labels:
+    app: certificatecheck-frontend
+    component: frontend
+spec:
+  selector:
+    app: certificatecheck-frontend
+  ports:
+  - name: http
+    port: 3000
+    targetPort: 3000
+    protocol: TCP
+  type: ClusterIP
+
+---
+# Route for Frontend (OKD/OpenShift specific)
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: certificatecheck-frontend-route
+  namespace: site-cert-check
+  labels:
+    app: certificatecheck-frontend
+spec:
+  to:
+    kind: Service
+    name: certificatecheck-frontend-service
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
+
+---
+# Route for Backend API (OKD/OpenShift specific)
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: certificatecheck-backend-route
+  namespace: site-cert-check
+  labels:
+    app: certificatecheck-backend
+spec:
+  to:
+    kind: Service
+    name: certificatecheck-backend-service
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
